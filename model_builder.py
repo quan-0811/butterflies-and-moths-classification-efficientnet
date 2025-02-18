@@ -7,7 +7,7 @@ class EfficientNetB0(nn.Module):
     def __init__(self, in_channels: int, out_channels: int):
         super().__init__()
         self.stage_1 = nn.Sequential(
-            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=(3, 3), stride=2, padding=1),
+            nn.Conv2d(in_channels=in_channels, out_channels=32, kernel_size=(3, 3), stride=2, padding=1),
             nn.BatchNorm2d(num_features=32),
             nn.SiLU(),
         )
