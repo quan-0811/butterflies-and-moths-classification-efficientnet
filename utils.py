@@ -11,3 +11,8 @@ def save_model(model: torch.nn.Module, targ_dir: str, model_name: str):
     # Save the model state_dict()
     print(f"[INFO] Saving model to: {model_save_path}")
     torch.save(obj=model.state_dict(), f=model_save_path)
+
+def accuracy_fn(y_pred: torch.Tensor, y_true: torch.Tensor):
+    correct = torch.eq(y_true, y_pred).sum().item()
+    acc = (correct / len(y_pred))
+    return acc

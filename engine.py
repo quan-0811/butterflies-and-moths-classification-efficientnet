@@ -3,7 +3,7 @@ import torch.nn as nn
 from tqdm.auto import tqdm
 from torch.utils.data import DataLoader
 
-def train_step(model: nn.Module, train_dataloader: DataLoader, loss_fn: nn.Module, optimizer: torch.optim.Optimizer, accuracy_fn, device: torch.device):
+def train_step(model: nn.Module, train_dataloader: DataLoader, loss_fn: nn.Module, optimizer: torch.optim.Optimizer, accuracy_fn, device: str):
     model.train()
 
     total_train_loss, total_train_accuracy = 0, 0
@@ -20,10 +20,11 @@ def train_step(model: nn.Module, train_dataloader: DataLoader, loss_fn: nn.Modul
         total_train_loss += loss
         total_train_accuracy += accuracy_fn(y_train_pred, y_train) * 100
 
+        optimizer.zero_grad()
+
         # Backpropagation
         loss.backward()
 
-        optimizer.zero_grad()
         optimizer.step()
 
     avg_loss_per_batch = total_train_loss / len(train_dataloader)
@@ -31,7 +32,7 @@ def train_step(model: nn.Module, train_dataloader: DataLoader, loss_fn: nn.Modul
 
     return avg_loss_per_batch, avg_acc_per_batch
 
-def valid_test_step(model: nn.Module, dataloader: DataLoader, loss_fn: nn.Module, accuracy_fn, device: torch.device):
+def valid_test_step(model: nn.Module, dataloader: DataLoader, loss_fn: nn.Module, accuracy_fn, device: str):
     model.eval()
 
     with torch.inference_mode():

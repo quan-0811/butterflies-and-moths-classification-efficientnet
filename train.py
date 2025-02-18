@@ -1,21 +1,20 @@
 import torch
 import torch.nn as nn
-import torchmetrics
 from torchvision import transforms
 from model_builder import EfficientNetB0
 from data_setup import create_dataloaders
 from engine import train
-from utils import save_model
+from utils import save_model, accuracy_fn
 
 # Hyperparameters
-NUM_EPOCHS = 1
-BATCH_SIZE = 32
+NUM_EPOCHS = 3
+BATCH_SIZE = 16
 LEARNING_RATE = 0.001
 
 # Directories
-train_dir = "data/train"
-valid_dir = "data/test"
-test_dir = "data/test"
+train_dir = "pizza_steak_sushi_20_percent/train"
+valid_dir = "pizza_steak_sushi_20_percent/test"
+test_dir = "pizza_steak_sushi_20_percent/test"
 
 # Device agnostic code
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -38,7 +37,6 @@ efficient_net_b0 = EfficientNetB0(in_channels=3, out_channels=len(class_names)).
 
 # Loss function, accuracy function and optimizer
 loss_fn = nn.CrossEntropyLoss()
-accuracy_fn = torchmetrics.Accuracy(task="multiclass", num_classes=len(class_names)).to(device)
 optimizer = torch.optim.RMSprop(efficient_net_b0.parameters(), lr=LEARNING_RATE)
 
 # Train the model
