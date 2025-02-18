@@ -12,9 +12,9 @@ BATCH_SIZE = 16
 LEARNING_RATE = 0.001
 
 # Directories
-train_dir = "pizza_steak_sushi_20_percent/train"
-valid_dir = "pizza_steak_sushi_20_percent/test"
-test_dir = "pizza_steak_sushi_20_percent/test"
+train_dir = "data/train"
+valid_dir = "data/valid"
+test_dir = "data/test"
 
 # Device agnostic code
 device = "cuda" if torch.cuda.is_available() else "cpu"
