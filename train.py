@@ -14,18 +14,21 @@ LEARNING_RATE = 0.001
 
 # Directories
 train_dir = "data/train"
-valid_dir = "data/valid"
+valid_dir = "data/test"
 test_dir = "data/test"
 
 # Device agnostic code
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Transforms
-data_transforms = transforms.ToTensor()
+data_transforms = transforms.Compose([
+    transforms.Resize(size=(224, 224)),
+    transforms.ToTensor()
+])
 
 # Create dataloaders
 train_dataloader, valid_dataloader, test_dataloader, class_names = create_dataloaders(train_dir=train_dir,
-                                                                         valid_dir = valid_dir,
+                                                                         valid_dir=valid_dir,
                                                                          test_dir=test_dir,
                                                                          batch_size=BATCH_SIZE,
                                                                          transform=data_transforms)

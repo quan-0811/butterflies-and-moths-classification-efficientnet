@@ -13,7 +13,7 @@ def train_step(model: nn.Module, train_dataloader: DataLoader, loss_fn: nn.Modul
 
         # Forward pass
         y_train_logit = model(X_train)
-        y_train_pred = torch.softmax(y_train_logit, dim=0).argmax(dim=1)
+        y_train_pred = torch.softmax(y_train_logit, dim=1).argmax(dim=1)
 
         # Loss & accuracy calculation
         loss = loss_fn(y_train_logit, y_train)
@@ -42,7 +42,7 @@ def valid_test_step(model: nn.Module, dataloader: DataLoader, loss_fn: nn.Module
 
             # Forward pass
             y_logit = model(X)
-            y_pred = torch.softmax(y_logit, dim=0).argmax(dim=1)
+            y_pred = torch.softmax(y_logit, dim=1).argmax(dim=1)
 
             # Loss & accuracy calculation
             loss = loss_fn(y_logit, y)
