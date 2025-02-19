@@ -11,38 +11,39 @@ class EfficientNetB0(nn.Module):
             nn.BatchNorm2d(num_features=32),
             nn.SiLU(),
         )
-        self.stage_2 = MBConv(input_channels=32, output_channels=16, kernel_size=(3, 3), stride=1, expansion_ratio=1, se_ratio=0.25)
+        self.stage_2 = MBConv(input_channels=32, output_channels=16, kernel_size=(3, 3), stride=1, expansion_ratio=1, se_ratio=0.25, stochastic_depth_prob=0)
         self.stage_3 = nn.Sequential(
-            MBConv(input_channels=16, output_channels=24, kernel_size=(3, 3), stride=2, expansion_ratio=6, se_ratio=0.25),
-            MBConv(input_channels=24, output_channels=24, kernel_size=(3, 3), stride=1, expansion_ratio=6, se_ratio=0.25)
+            MBConv(input_channels=16, output_channels=24, kernel_size=(3, 3), stride=2, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.0125),
+            MBConv(input_channels=24, output_channels=24, kernel_size=(3, 3), stride=1, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.025)
         )
         self.stage_4 = nn.Sequential(
-            MBConv(input_channels=24, output_channels=40, kernel_size=(5, 5), stride=2, expansion_ratio=6, se_ratio=0.25),
-            MBConv(input_channels=40, output_channels=40, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25)
+            MBConv(input_channels=24, output_channels=40, kernel_size=(5, 5), stride=2, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.0375),
+            MBConv(input_channels=40, output_channels=40, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.05)
         )
         self.stage_5 = nn.Sequential(
-            MBConv(input_channels=40, output_channels=80, kernel_size=(3, 3), stride=2, expansion_ratio=6, se_ratio=0.25),
-            MBConv(input_channels=80, output_channels=80, kernel_size=(3, 3), stride=1, expansion_ratio=6, se_ratio=0.25),
-            MBConv(input_channels=80, output_channels=80, kernel_size=(3, 3), stride=1, expansion_ratio=6, se_ratio=0.25)
+            MBConv(input_channels=40, output_channels=80, kernel_size=(3, 3), stride=2, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.0625),
+            MBConv(input_channels=80, output_channels=80, kernel_size=(3, 3), stride=1, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.075),
+            MBConv(input_channels=80, output_channels=80, kernel_size=(3, 3), stride=1, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.0875)
         )
         self.stage_6 = nn.Sequential(
-            MBConv(input_channels=80, output_channels=112, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25),
-            MBConv(input_channels=112, output_channels=112, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25),
-            MBConv(input_channels=112, output_channels=112, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25)
+            MBConv(input_channels=80, output_channels=112, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.1),
+            MBConv(input_channels=112, output_channels=112, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.1125),
+            MBConv(input_channels=112, output_channels=112, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.125)
         )
         self.stage_7 = nn.Sequential(
-            MBConv(input_channels=112, output_channels=192, kernel_size=(5, 5), stride=2, expansion_ratio=6, se_ratio=0.25),
-            MBConv(input_channels=192, output_channels=192, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25),
-            MBConv(input_channels=192, output_channels=192, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25),
-            MBConv(input_channels=192, output_channels=192, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25)
+            MBConv(input_channels=112, output_channels=192, kernel_size=(5, 5), stride=2, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.1375),
+            MBConv(input_channels=192, output_channels=192, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.15),
+            MBConv(input_channels=192, output_channels=192, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.1625),
+            MBConv(input_channels=192, output_channels=192, kernel_size=(5, 5), stride=1, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.175)
         )
-        self.stage_8 = MBConv(input_channels=192, output_channels=320, kernel_size=(3, 3), stride=1, expansion_ratio=6, se_ratio=0.25)
+        self.stage_8 = MBConv(input_channels=192, output_channels=320, kernel_size=(3, 3), stride=1, expansion_ratio=6, se_ratio=0.25, stochastic_depth_prob=0.1825)
         self.classifier = nn.Sequential(
             nn.Conv2d(in_channels=320, out_channels=1280, kernel_size=(1, 1), stride=1),
             nn.BatchNorm2d(num_features=1280),
             nn.SiLU(),
             GlobalAvgPooling(output_size=(1, 1)),
             nn.Flatten(),
+            nn.Dropout(p=0.2),
             nn.Linear(in_features=1280, out_features=out_channels)
         )
 
