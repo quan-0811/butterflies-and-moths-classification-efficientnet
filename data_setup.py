@@ -1,5 +1,6 @@
 import torchvision
 from torch.utils.data import DataLoader
+import os
 
 def create_dataloaders(train_dir: str, valid_dir: str, test_dir: str, batch_size: int, transform):
 
@@ -12,12 +13,17 @@ def create_dataloaders(train_dir: str, valid_dir: str, test_dir: str, batch_size
 
     train_dataloader = DataLoader(dataset=train_dataset,
                                   batch_size=batch_size,
-                                  shuffle=True)
+                                  num_workers=os.cpu_count(),
+                                  shuffle=True,
+                                  pin_memory=True)
     valid_dataloader = DataLoader(dataset=valid_dataset,
                                   batch_size=batch_size,
+                                  num_workers=os.cpu_count(),
                                   shuffle=False)
     test_dataloader = DataLoader(dataset=test_dataset,
                                  batch_size=batch_size,
-                                 shuffle=False)
+                                 num_workers=os.cpu_count(),
+                                 shuffle=False,
+                                 pin_memory=True)
 
     return train_dataloader, valid_dataloader, test_dataloader, train_dataset.classes
