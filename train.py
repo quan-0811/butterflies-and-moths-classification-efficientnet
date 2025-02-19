@@ -1,3 +1,4 @@
+import os
 import torch
 import torch.nn as nn
 from torchvision import transforms
@@ -7,9 +8,9 @@ from engine import train
 from utils import save_model, accuracy_fn
 
 # Hyperparameters
-NUM_EPOCHS = 3
-BATCH_SIZE = 16
-LEARNING_RATE = 0.001
+NUM_EPOCHS = 50
+BATCH_SIZE = 32
+LEARNING_RATE = 0.005
 
 # Directories
 train_dir = "data/train"
@@ -34,6 +35,17 @@ train_dataloader, valid_dataloader, test_dataloader, class_names = create_datalo
 
 # Create model
 efficient_net_b0 = EfficientNetB0(in_channels=3, out_channels=len(class_names)).to(device)
+
+# Load model checkpoint
+model_path = "models/efficient_net_b0.pth"
+if os.path.exists(model_path):
+    try:
+        efficient_net_b0.load_state_dict(torch.load(model_path, weights_only=True, map_location=torch.device('cpu')))
+        print("Model weights loaded successfully.")
+    except Exception as e:
+        print(f"Error loading model weights: {e}")
+else:
+    print("No pre-trained model found. Initializing a new model.")
 
 # Loss function, accuracy function and optimizer
 loss_fn = nn.CrossEntropyLoss()
