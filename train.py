@@ -14,24 +14,29 @@ LEARNING_RATE = 0.005
 
 # Directories
 train_dir = "data/train"
-valid_dir = "data/valid"
 test_dir = "data/test"
 
 # Device agnostic code
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Transforms
-data_transforms = transforms.Compose([
-    transforms.Resize(size=(224, 224)),
+train_transforms = transforms.Compose([
+    transforms.Resize(size=(96, 96)),
+    transforms.TrivialAugmentWide(num_magnitude_bins=31),  # Randomly erase a part of the image
+    transforms.ToTensor(),
+])
+
+valid_test_transforms = transforms.Compose([
+    transforms.Resize(size=(96, 96)),
     transforms.ToTensor()
 ])
 
 # Create dataloaders
 train_dataloader, valid_dataloader, test_dataloader, class_names = create_dataloaders(train_dir=train_dir,
-                                                                         valid_dir=valid_dir,
                                                                          test_dir=test_dir,
                                                                          batch_size=BATCH_SIZE,
-                                                                         transform=data_transforms)
+                                                                         train_transform=train_transforms,
+                                                                         valid_test_transform=valid_test_transforms)
 
 # Create model
 efficient_net_b0 = EfficientNetB0(in_channels=3, out_channels=len(class_names)).to(device)
