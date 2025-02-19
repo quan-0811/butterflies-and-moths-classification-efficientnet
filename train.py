@@ -40,7 +40,7 @@ efficient_net_b0 = EfficientNetB0(in_channels=3, out_channels=len(class_names)).
 model_path = "models/efficient_net_b0.pth"
 if os.path.exists(model_path):
     try:
-        efficient_net_b0.load_state_dict(torch.load(model_path, weights_only=True, map_location=torch.device('cpu')))
+        efficient_net_b0.load_state_dict(torch.load(model_path, weights_only=True))
         print("Model weights loaded successfully.")
     except Exception as e:
         print(f"Error loading model weights: {e}")
