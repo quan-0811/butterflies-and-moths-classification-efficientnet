@@ -24,7 +24,7 @@ def accuracy_fn(y_pred: torch.Tensor, y_true: torch.Tensor):
 def predict(image):
 
     transform = transforms.Compose([
-        transforms.Resize(size=(96, 96)),
+        transforms.Resize(size=(224, 224)),
         transforms.ToTensor(),
     ])
 
