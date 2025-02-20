@@ -1,9 +1,8 @@
 import torch
 from pathlib import Path
+import torchvision.datasets
 from PIL import Image
 from torchvision import transforms
-
-from data_setup import create_dataloaders
 from model_builder import EfficientNetB0
 
 
@@ -28,7 +27,7 @@ def predict(image):
         transforms.ToTensor(),
     ])
 
-    _, _, _, classes = create_dataloaders("data/train", "data/test", 32, transform, transform)
+    classes = torchvision.datasets.ImageFolder(root="data/train", transform=transform).classes
 
     model = EfficientNetB0(in_channels=3, out_channels=len(classes)).to("cpu")
 
@@ -40,6 +39,13 @@ def predict(image):
     model.eval()
     with torch.inference_mode():
         output = model(image)
-    predicted_class = torch.argmax(output, dim=1).item()
 
-    return f"Predicted Class: {classes[predicted_class]}"
+    probabilities = torch.softmax(output, dim=1)[0]
+
+    top_probs, top_indices = torch.topk(probabilities, 7)  # Get top 3 classes
+    top_classes = [classes[idx] for idx in top_indices.tolist()]
+    top_probs = top_probs.tolist()
+
+    results = {top_classes[i]: float(top_probs[i]) for i in range(len(top_classes))}
+
+    return results
