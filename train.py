@@ -8,7 +8,7 @@ from engine import train
 from utils import save_model, accuracy_fn
 
 # Hyperparameters
-NUM_EPOCHS = 50
+NUM_EPOCHS = 1
 BATCH_SIZE = 32
 LEARNING_RATE = 0.005
 
@@ -28,17 +28,20 @@ transform = transforms.Compose([
 
 augmentation_transforms = [
     transforms.Compose([
+        transforms.Resize(size=(224, 224)),
         transforms.RandomRotation(degrees=15),
         transforms.RandomHorizontalFlip(p=0.5),
         transforms.RandomAffine(degrees=10, translate=(0.1, 0.1), scale=(0.9, 1.1)),
         transforms.ToTensor(),
     ]),
     transforms.Compose([
+        transforms.Resize(size=(224, 224)),
         transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.05),
         transforms.RandomGrayscale(p=0.1),
         transforms.ToTensor(),
     ]),
     transforms.Compose([
+        transforms.Resize(size=(224, 224)),
         transforms.RandomPerspective(distortion_scale=0.1, p=0.2),
         transforms.RandomResizedCrop(size=224, scale=(0.95, 1.0)),
         transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
