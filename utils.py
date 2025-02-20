@@ -42,7 +42,7 @@ def predict(image):
 
     probabilities = torch.softmax(output, dim=1)[0]
 
-    top_probs, top_indices = torch.topk(probabilities, 7)  # Get top 3 classes
+    top_probs, top_indices = torch.topk(probabilities, 7)
     top_classes = [classes[idx] for idx in top_indices.tolist()]
     top_probs = top_probs.tolist()
 
